@@ -3,29 +3,30 @@ import logo from './logo.svg';
 import './App.css';
 import {useChannel, useEvent} from "@harelpls/use-pusher";
 
+type Uid = string;
+
 function App() {
-  const [messages, setMessages] = useState<unknown[]>([]);
+  const [coins, setCoins] = useState<Uid[]>([]);
+  const [hearts, setHearts] = useState<Uid[]>([]);
+  const [lastEvent, setLastEvent] = useState<string>('');
   const channel = useChannel("scores");
-  useEvent(channel, "message", (data) =>
-    data && setMessages((messages) => [...messages, data])
+  useEvent(channel, "coin", (key) =>
+    key && [
+      !coins.includes(key as Uid) && setCoins([key as Uid, ...coins]),
+      setLastEvent('received coin with UID ' + key as Uid)
+    ]
+  );
+  useEvent(channel, "heart", (key) =>
+    key && [
+      !hearts.includes(key as Uid) && setHearts([key as Uid, ...hearts]),
+      setLastEvent('received heart with UID ' + key as Uid)
+    ]
   );
   return (
     <div className="App">
-      <pre>{messages}</pre>
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <p>💰 {coins.length}</p>
+      <p>❤️ {hearts.length}</p>
+      {lastEvent && <aside>Last event: {lastEvent}</aside>}
     </div>
   );
 }
