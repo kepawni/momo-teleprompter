@@ -1,10 +1,17 @@
-import React from 'react';
+import React, {useState} from 'react';
 import logo from './logo.svg';
 import './App.css';
+import {useChannel, useEvent} from "@harelpls/use-pusher";
 
 function App() {
+  const [messages, setMessages] = useState<unknown[]>([]);
+  const channel = useChannel("scores");
+  useEvent(channel, "message", (data) =>
+    data && setMessages((messages) => [...messages, data])
+  );
   return (
     <div className="App">
+      <pre>{messages}</pre>
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
