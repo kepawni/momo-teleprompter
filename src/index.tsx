@@ -3,10 +3,29 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { PusherProvider } from "@harelpls/use-pusher";
 
+const config = {
+    // required config props
+    clientKey: "aa0e858e50bdfee1caa2",
+    cluster: "eu",
+
+    // optional if you'd like to trigger events. BYO endpoint.
+    // see "Trigger Server" below for more info
+    // triggerEndpoint: "/pusher/trigger",
+
+    // required for private/presence channels
+    // also sends auth headers to trigger endpoint
+    // authEndpoint: "/pusher/auth",
+    // auth: {
+    //     headers: { Authorization: "Bearer token" },
+    // },
+};
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+      <PusherProvider {...config}>
+          <App />
+      </PusherProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
